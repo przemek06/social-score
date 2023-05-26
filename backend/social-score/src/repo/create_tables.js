@@ -1,21 +1,36 @@
 const pool = require("./pool")
 
+const dropTables = async () => {
+    const dropQuery = `
+        DROP table IF EXISTS user_;
+    `
+}
+
 const createUserTable = async () => {
 
     const createTableQuery = `
-        CREATE TABLE IF NOT EXISTS user_ (
-            user_id INT NOT NULL,
-            pesel VARCHAR(9) NOT NULL UNIQUE,
-            PRIMARY KEY (user_id)
-        );
+    CREATE TABLE IF NOT EXISTS user_ (
+        id SERIAL NOT NULL,
+        pesel VARCHAR(11) NOT NULL UNIQUE,
+        email VARCHAR(64),
+        "name" VARCHAR(64),
+        surname VARCHAR(64),
+        "password" VARCHAR(64),
+        "height" REAL,
+        weight REAL,
+        education INT,
+        address VARCHAR(200),
+        city VARCHAR(50),
+        zipCode  VARCHAR(6),
+        PRIMARY KEY (id)
+      );      
     `
 
-    return pool.query(createTableQuery, (error, results) => {
-        if (error) {
-            throw error
-        }
-        return results
-    })
+    await pool.query(createTableQuery)
 }
 
-module.exports = createUserTable
+const setupDatabase = async () => {
+    createUserTable()
+}
+
+module.exports = setupDatabase
