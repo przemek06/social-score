@@ -22,7 +22,7 @@ const insertUser = async (user) => {
         ) 
         RETURNING *
     `
-    return (await pool.query(query, [pesel, email, name, surname, password, height, weight, education, address, city, zipCode])).rows()
+    return (await pool.query(query, [pesel, email, name, surname, password, height, weight, education, address, city, zipCode])).rows
 
 } 
 
@@ -31,7 +31,7 @@ const selectUserByPesel = async (pesel) => {
         SELECT * FROM user_ WHERE PESEL = $1
     `
 
-    return (await pool.query(query, [pesel])).rows()
+    return (await pool.query(query, [pesel])).rows
 
 }
 
