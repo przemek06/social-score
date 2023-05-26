@@ -1,0 +1,42 @@
+version: "3.8"
+
+networks:
+  social-score-network:
+    name: social-score-network
+    driver: bridge
+
+services:
+  db:
+    image: postgres:15.1-alpine
+    restart: always
+    networks:
+      - social-score-network
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+
+  social-score-frontend:
+    build:
+      context: ./frontend/social-score
+      dockerfile: Dockerfile
+    networks:
+      - social-score-network
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+
+  social-score-backend:
+    build:
+      context: ./backend/social-score
+      dockerfile: Dockerfile
+    networks:
+      - social-score-network
+    ports:
+      - "5000:5000"
+    expose:
+      - "5000"
