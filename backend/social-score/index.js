@@ -3,14 +3,12 @@ const cors = require("cors");
 const setupDatabase = require("./src/repo/create_tables");
 const { selectUserByPesel } = require("./src/repo/user_repository")
 
-const test = async () => {
-  const a = await selectUserByPesel()
-  console.log(a)
+const database = async () => {
+  await setupDatabase()
 
 }
  // initialize database
-setupDatabase()
-test()
+database()
 require('dotenv').config()
 
 const app = express();
