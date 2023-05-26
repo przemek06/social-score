@@ -1,11 +1,13 @@
 const pool = require("./pool")
 
 const dropTables = async () => {
-    const dropQuery = `
+    const query = `
+        DROP table IF EXISTS crime;
         DROP table IF EXISTS review;
         DROP table IF EXISTS user_;
-
     `
+
+    return await pool.query(query)
 }
 
 const createUserTable = async () => {
@@ -14,6 +16,7 @@ const createUserTable = async () => {
     CREATE TABLE IF NOT EXISTS user_ (
         pesel VARCHAR(11) NOT NULL,
         email VARCHAR(64),
+        "role" VARCHAR(64),
         "name" VARCHAR(64),
         surname VARCHAR(64),
         "password" VARCHAR(64),
@@ -27,7 +30,7 @@ const createUserTable = async () => {
       ) 
     `
 
-    await pool.query(query)
+    return await pool.query(query)
 }
 
 const createReviewTable = async () => {
@@ -38,7 +41,22 @@ const createReviewTable = async () => {
         description VARCHAR(1024),
         author VARCHAR(11)  references user_(pesel),
         subject VARCHAR(11)  references user_(pesel),
-        CONSTRAINT unique_column_pair UNIQUE (author, subject) 
+        CONSTRAINT unique_column_pair UNIQUE (author, subject),
+        PRIMARY KEY(id)
+    )  
+    `
+
+    await pool.query(query)
+}
+
+const createCrimeTable = async () => {
+    const query = `
+    CREATE TABLE IF NOT EXISTS crime (
+        id SERIAL not null,
+        "name" VARCHAR(64),
+        weight INT,
+        subject VARCHAR(11)  references user_(pesel),
+        PRIMARY KEY(id)
     )  
     `
 
@@ -46,8 +64,10 @@ const createReviewTable = async () => {
 }
 
 const setupDatabase = async () => {
+    await dropTables()
     await createUserTable()
     await createReviewTable()
+    await createCrimeTable()
 }
 
 module.exports = setupDatabase
