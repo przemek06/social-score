@@ -9,7 +9,6 @@ const database = async () => {
 }
  // initialize database
 database()
-require('dotenv').config()
 
 const app = express();
 app.use(cors());

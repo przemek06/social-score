@@ -36,6 +36,7 @@ router.post("/login", async (req, res) => {
   if (!validPassword) return res.status(400).send("Invalid pesel or password.");
   
   const token = generateJwtToken(userData.id, userData.pesel, userData.email, userData.name, userData.surname);
+
   return res.status(200).send({token});
 });
 

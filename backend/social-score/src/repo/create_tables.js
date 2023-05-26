@@ -2,7 +2,7 @@ const pool = require("./pool")
 
 const dropTables = async () => {
     const query = `
-        DROP table IF EXISTS;
+        DROP table IF EXISTS crime;
         DROP table IF EXISTS review;
         DROP table IF EXISTS user_;
     `
@@ -16,6 +16,7 @@ const createUserTable = async () => {
     CREATE TABLE IF NOT EXISTS user_ (
         pesel VARCHAR(11) NOT NULL,
         email VARCHAR(64),
+        "role" VARCHAR(64),
         "name" VARCHAR(64),
         surname VARCHAR(64),
         "password" VARCHAR(64),
