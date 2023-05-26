@@ -7,7 +7,7 @@ const geoUrl = "https://raw.githubusercontent.com/ppatrzyk/polska-geojson/master
   // "https://raw.githubusercontent.com/ppatrzyk/polska-geojson/master/wojewodztwa/wojewodztwa-max.geojson"
 
 export default function DangerMap({mapUrl}) {
-const [position, setPosition] = useState({coordinates:[-15,51], zoom:12})
+const [position, setPosition] = useState({coordinates:[16.87,51.11], zoom:58})
 
   function handleZoomIn() {
     setPosition({ ...position, zoom: position.zoom * 2 });
@@ -23,6 +23,7 @@ const [position, setPosition] = useState({coordinates:[-15,51], zoom:12})
   }
 
   window.onload = () => {
+    console.log(position);
     setPosition({coordinates:[-15,51], zoom: position.zoom })
   };
 
@@ -59,8 +60,9 @@ const [position, setPosition] = useState({coordinates:[-15,51], zoom:12})
           </svg>
         </button>
       </div>
-    <ComposableMap projection="geoMercator" width={800} height={600}>
-      <ZoomableGroup zoom={position.zoom} position={position.coordinates} onMoveEnd={handleMoveEnd}>
+      {/* width={800} height={600} */}
+    <ComposableMap projection="geoAlbers" projectionConfig={{center:[15,50], scale: 1500}} > 
+      <ZoomableGroup zoom={position.zoom} center={position.coordinates} position={position.coordinates} onMoveEnd={handleMoveEnd}>
       <Geographies geography={geoUrl}>
         {({ geographies }) =>
           geographies.map((geo) => {
