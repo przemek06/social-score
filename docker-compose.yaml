@@ -45,5 +45,8 @@ services:
       build: './flaskmodel'
       ports:
         - '4999:4999'
-
-  
+      expose:
+        - "4999"
+      networks:
+        - social-score-network
+    
