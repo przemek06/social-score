@@ -21,7 +21,7 @@ def pesel_to_score(pesel):
 
 
 
-    return score
+    return "score"
 
 
 @app.route('/social_score')
