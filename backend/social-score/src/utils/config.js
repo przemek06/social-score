@@ -1,0 +1,3 @@
+module.exports = {
+  JWT_KEY: "2J390VW9MM4G323H293FH294F8"
+};

@@ -2,44 +2,41 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 
-const { call } = require("../start/call.js");
-const { validateUser, generateJwtToken } = require("../models/User.js");
+const { validateUser, validatePesel, generateJwtToken } = require("../models/User.js");
 const { encrypt, compare } = require("../utils/functions.js");
+const { insertUser, selectUserByPesel } = require("../repo/user_repository.js");
 
 router.post("/register", async (req, res) => {
-  console.log("GET /auth/register", req.params, req.body, req.query);
+  console.log("POST /auth/register", req.params, req.body, req.query);
 
-  await call(async () => {
-    const { error, value } = validateUser(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+  const { error, value } = validateUser(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
-    // Check if user is already registered by pesel and email
+  const user = await selectUserByPesel(value.pesel);
+  if (user.length > 0) return res.status(400).send("User already registered with that PESEL.");
+  
+  const passwordHash = await encrypt(value.password);
 
-    const passwordHash = await encrypt(value.password);
+  const result = await insertUser({...value, password: passwordHash})
 
-    // Create user in database
-
-    return res.status(200).send({
-      userId: /* user id */
-    });
-  }, res);
+  return res.status(200).send(result[0]);
 });
 
 router.post("/login", async (req, res) => {
-  console.log("GET /auth/login", req.params, req.body, req.query);
+  console.log("POST /auth/login", req.params, req.body, req.query);
 
-  await call(async () => {
+  const { error, value } = validatePesel(req.body.pesel);
+  if (error) return res.status(400).send(error.details[0].message);
 
-    // Find user in DB by pesel
-    
-    if (!user) return res.status(400).send("Invalid email or password.");
+  const user = await selectUserByPesel(value);
+  if (user.length !== 1) return res.status(400).send("Invalid pesel or password.");
+  const userData = user[0];
 
-    const validPassword = await compare(req.body.password, user.password);
-    if (!validPassword) return res.status(400).send("Invalid email or password.");
-    
-    const token = generateJwtToken(user.id, user.pesel, user.email, user.name, user.surname);
-    return res.status(200).send({token});
-  }, res);
+  const validPassword = await compare(req.body.password, userData.password);
+  if (!validPassword) return res.status(400).send("Invalid pesel or password.");
+  
+  const token = generateJwtToken(userData.id, userData.pesel, userData.email, userData.name, userData.surname);
+  return res.status(200).send({token});
 });
 
 module.exports = router;
