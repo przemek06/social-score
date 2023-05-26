@@ -37,7 +37,7 @@ router.post("/login", async (req, res) => {
   
   const token = generateJwtToken(userData.id, userData.pesel, userData.email, userData.name, userData.surname);
 
-  res.setHeader('Set-Cookie', `token=${token}`);
+  res.setHeader('Set-Cookie', `token=${token}; Path=/`);
   return res.status(200).send(userData);
 });
 
