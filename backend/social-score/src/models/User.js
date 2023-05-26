@@ -1,14 +1,17 @@
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 
+const peselSchema = Joi.string().regex(/^[0-9]{11}$/, "pesel").required();
+const { JWT_KEY } = require("../utils/config.js");
+
 const schema = Joi.object({
 
-  pesel: Joi.string().regex(/^[0-9]{11}$/, "pesel").required(),
+  pesel: peselSchema,
   email: Joi.string().email().required(),
   name: Joi.string().min(1).max(50).required(),
   surname: Joi.string().min(1).max(50).required(),
 
-  password: Joi.string().min(8).require(),
+  password: Joi.string().min(8).required(),
 
   height: Joi.number().min(0).max(300).required(),
   weight: Joi.number().min(0).max(500).required(),
@@ -37,9 +40,13 @@ const generateJwtToken = (id, pesel, email, name, surname) => {
       name,
       surname
     },
-    process.env.JWT_KEY
+    JWT_KEY
   );
 };
+
+validatePesel = (pesel) => {
+  return peselSchema.validate(pesel);
+}
 
 validateUser = (user) => {
   return schema.validate(user);
@@ -48,5 +55,6 @@ validateUser = (user) => {
 module.exports = {
   schema,
   generateJwtToken,
-  validateUser
+  validateUser,
+  validatePesel
 }
