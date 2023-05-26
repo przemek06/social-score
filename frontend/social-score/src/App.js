@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, redirect, Navigate } from 'react-router-dom';
 import ProtectedRoutes from './navigation/ProtectedRoutes';
 import UserDashboard from './pages/UserDashboard';
+import DangerMap from './pages/DangerMap';
 
 function App() {
   const userList = ['ROLE_USER', 'ROLE_ADMIN'];
@@ -31,12 +32,19 @@ function App() {
     }
   }
 
+  function getSingleScreen (chosenUser, user, screen) {
+    if (chosenUser === user)
+      return screen;
+    else return <Navigate to="/" replace/>;
+  }
+
   return (
     <Router>
       <Routes>
         <Route element={<ProtectedRoutes user={user} isHidden={hiddenNavbarRoutes.includes(window.location.pathname)}/>}>
           {/*Logged out screens*/}
-          <Route exact path="/" element={getLoggedOutScreen(user, <UserDashboard />)} />
+          <Route exact path="/" element={getSingleScreen("ROLE_USER", user, <UserDashboard />)} />
+          <Route exact path="/danger-map" element={<DangerMap mapUrl="/map1.geo.json" />} />
         </Route>
       </Routes>
     </Router>
