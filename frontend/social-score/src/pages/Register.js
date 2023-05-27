@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Container, Form, Button, Dropdown,  Row, Col, Nav  } from 'react-bootstrap';
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const loadReviewData = async (data) => {
     let requestBody = JSON.stringify(data);
@@ -10,9 +10,10 @@ const loadReviewData = async (data) => {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
+      credentials: "omit",
       mode: "cors",
       referrerPolicy: "no-referrer",
+      origin: 'http://localhost:3000'
     });
   
     if (response.status == 200) {
@@ -40,29 +41,37 @@ const DropdownComponent = () => {
   };
 
 const Register = () => {
+    const navigate = useNavigate();
+
     const [data, setData] = useState({
         pesel: "",
         email: "",
         name: "",
         surname: "",
         password: "",
-        height: "",
-        weight: "",
-        education: "0",
+        height: 0,
+        weight: 0,
+        education: 0,
         address: "",
         city: "",
         zipCode: "",
     });
   
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
       e.preventDefault();
-      loadReviewData(data);
-      redirect("/");
+      await loadReviewData(data);
+      navigate("/login");
     };
 
     const onDataChange = (e, value) => {
         let newData = {...data};
         newData[value] = e.target.value;
+        setData(newData);
+    };
+
+    const onNumberChange = (e, value) => {
+        let newData = {...data};
+        newData[value] = parseInt(e.target.value,10);
         setData(newData);
     };
 
@@ -74,16 +83,20 @@ const Register = () => {
 
     const getDropdownText = (num) => {
         switch(num) {
-            case "0":
+            case 0:
               return "Brak wykształcenia";
-            case "1":
+            case 1:
                 return "Podstawowe";
-            case "2":
+            case 2:
                 return "Średnie";
-            case "3":
-                return "Wyższe";
-            case "4":
-                return "Doktorat";
+            case 3:
+                return "Licencjat";
+            case 4:
+                return "Magister";
+            case 5:
+                return "Doktor";
+            case 6:
+                return "Profesor";
             default:
                 return "Brak wykształcenia";
         }
@@ -154,7 +167,7 @@ const Register = () => {
                             type="text"
                             placeholder="Wpisz wzrost"
                             value={data.height}
-                            onChange={(e) => onDataChange(e, 'height')}
+                            onChange={(e) => onNumberChange(e, 'height')}
                             />
                         </Form.Group>
                         </div>
@@ -167,7 +180,7 @@ const Register = () => {
                         type="text"
                         placeholder="Wpisz wagę"
                         value={data.weight}
-                        onChange={(e) => onDataChange(e, 'weight')}
+                        onChange={(e) => onNumberChange(e, 'weight')}
                         />
                     </Form.Group>
 
@@ -179,11 +192,13 @@ const Register = () => {
                             </Dropdown.Toggle>
                     
                             <Dropdown.Menu>
-                            <Dropdown.Item eventKey="0">{getDropdownText("0")}</Dropdown.Item>
-                            <Dropdown.Item eventKey="1">{getDropdownText("1")}</Dropdown.Item>
-                            <Dropdown.Item eventKey="2">{getDropdownText("2")}</Dropdown.Item>
-                            <Dropdown.Item eventKey="3">{getDropdownText("3")}</Dropdown.Item>
-                            <Dropdown.Item eventKey="4">{getDropdownText("4")}</Dropdown.Item>
+                            <Dropdown.Item eventKey={0}>{getDropdownText(0)}</Dropdown.Item>
+                            <Dropdown.Item eventKey={1}>{getDropdownText(1)}</Dropdown.Item>
+                            <Dropdown.Item eventKey={2}>{getDropdownText(2)}</Dropdown.Item>
+                            <Dropdown.Item eventKey={3}>{getDropdownText(3)}</Dropdown.Item>
+                            <Dropdown.Item eventKey={4}>{getDropdownText(4)}</Dropdown.Item>
+                            <Dropdown.Item eventKey={5}>{getDropdownText(5)}</Dropdown.Item>
+                            <Dropdown.Item eventKey={6}>{getDropdownText(6)}</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     </Form.Group>
