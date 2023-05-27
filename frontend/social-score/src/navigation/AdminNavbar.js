@@ -14,7 +14,7 @@ export default function AdminNavbar({onLogout}) {
             <Nav.Link href="/danger-map">Danger map</Nav.Link>
             <Nav.Link href="/add_review">Add review</Nav.Link>
             <Nav.Link href="/add_crime">Register crimes</Nav.Link>
-            <Nav.Link href="/add_good">Register good deeds</Nav.Link>
+            <Nav.Link href="/add_good_deed">Register good deeds</Nav.Link>
             <Nav.Link onClick={onLogout}>Logout</Nav.Link>
           </Nav>
         </Container>

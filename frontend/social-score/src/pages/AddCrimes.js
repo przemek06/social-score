@@ -5,7 +5,7 @@ import UserList from "../components/UserList";
 
 const uploadReviewData = async (data) => {
     let requestBody = JSON.stringify(data);
-    let response = await fetch("http://localhost:5000/review", {
+    let response = await fetch("http://localhost:5000/crime", {
       method: "POST",
       body: requestBody,
       headers: {
@@ -48,15 +48,15 @@ const uploadReviewData = async (data) => {
 function ReviewInput({onDataChange, onNumberChange, onSubmit}) {
     return(
         <Form>
-            <h3>Oceń użytkownika</h3>
-            <FormControl style={{marginTop: '20px', marginBottom: '20px'}} type="number" placeholder="Wprowadź ocenę od 1-10" onTextChange={onNumberChange}/>
-            <FormControl style={{marginBottom: '20px', height: '400px'}} as="textarea" placeholder="Opisz swoją recenzję" onTextChange={onDataChange}/>
+            <h3>Zarejestruj nowe przestępstwo</h3>
+            <FormControl style={{marginTop: '20px', marginBottom: '20px'}} type="number" placeholder="Wprowadź rangę od 1-10" onTextChange={onNumberChange}/>
+            <FormControl style={{marginBottom: '20px', height: '400px'}} as="textarea" placeholder="Opisz rodzaj wykroczenia" onTextChange={onDataChange}/>
             <Button variant="primary" onClick={onSubmit}>Submit</Button>
         </Form>
     );
 }
 
-export default function AddReview() {
+export default function AddCrimes() {
     const [searchText, setSearchText] = useState("");
     const [users, setUsers] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState(0);
@@ -64,7 +64,7 @@ export default function AddReview() {
 
     const onDataChange = (e) => {
         let newData = {...reviewData};
-        newData.description = e.target.value;
+        newData.name = e.target.value;
         setReviewData(newData);
     }
 

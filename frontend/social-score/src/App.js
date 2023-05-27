@@ -8,6 +8,8 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import useLocalStorage, {userRoleKey} from './hooks/LocalStorageHook';
 import AddReview from './pages/AddReview';
+import AddCrimes from './pages/AddCrimes';
+import AddGoodDeed from './pages/AddGoodDeed';
 
 const geoUrl = "https://raw.githubusercontent.com/ppatrzyk/polska-geojson/master/miasta/wroclaw-max.geojson"
 
@@ -76,6 +78,8 @@ function App() {
           <Route exact path="/" element={getLoggedInScreen(user, <Dashboard />)} />
           <Route exact path="/danger-map" element={getLoggedInScreen(user, <DangerMap />)} />
           <Route exact path="/add_review" element={getLoggedInScreen(user, <AddReview />)} />
+          <Route exact path="/add_crime" element={getLoggedInScreen(user, <AddCrimes />)} />
+          <Route exact path="/add_good_deed" element={getLoggedInScreen( user, <AddGoodDeed />)} />
         </Route>
       </Routes>
     </Router>
