@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require('cookie-parser');
 const setupDatabase = require("./src/repo/create_tables");
 const { selectUserByPesel } = require("./src/repo/user_repository")
 
@@ -11,7 +12,10 @@ const database = async () => {
 database()
 
 const app = express();
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({
+  origin: '*'
+}));
 app.use(express.urlencoded({ extended: true }));
 
 require("./src/start/routes")(app);
