@@ -4,10 +4,12 @@ import { BrowserRouter as Router, Routes, Route, redirect, Navigate } from 'reac
 import ProtectedRoutes from './navigation/ProtectedRoutes';
 import UserDashboard from './pages/UserDashboard';
 import DangerMap from './pages/DangerMap';
+import Register from './pages/Register';
+import Login from './pages/Login';
 
 function App() {
   const userList = ['ROLE_USER', 'ROLE_ADMIN'];
-  const [user, setUser] = useState('ROLE_USER');
+  const [user, setUser] = useState('');
   
   const hiddenNavbarRoutes = []
 
@@ -43,6 +45,9 @@ function App() {
       <Routes>
         <Route element={<ProtectedRoutes user={user} isHidden={hiddenNavbarRoutes.includes(window.location.pathname)}/>}>
           {/*Logged out screens*/}
+          <Route exact path="/register" element={getLoggedOutScreen(user, <Register />)} />
+          <Route exact path="/login" element={getLoggedOutScreen(user, <Login />)} />
+          
           <Route exact path="/" element={getSingleScreen("ROLE_USER", user, <UserDashboard />)} />
           <Route exact path="/danger-map" element={<DangerMap mapUrl="/map1.geo.json" />} />
         </Route>
