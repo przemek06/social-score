@@ -2,16 +2,6 @@ import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavItemDiv from '../components/navigation-components/NavItemDiv';
-
-const NavRow = ({onAddAppointemnt}) => {
-    return (
-        <div class="flex-row">
-            <NavItemDiv path="/view_appointments" text="View all appointments" />
-        </div>
-    );
-};
-
 
 export default function UserNavbar() {
   const [showNav, setShowNav] = useState(true);

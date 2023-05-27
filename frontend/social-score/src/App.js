@@ -6,10 +6,11 @@ import UserDashboard from './pages/UserDashboard';
 import DangerMap from './pages/DangerMap';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   const userList = ['ROLE_USER', 'ROLE_ADMIN'];
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState('ROLE_USER');
   
   const hiddenNavbarRoutes = []
 
@@ -28,16 +29,21 @@ function App() {
     switch(user) {
       case "ROLE_USER":
       case "ROLE_ADMIN":
-        return <Navigate to="/" replace/>;
+        return <Navigate to="/login" replace/>;
       default:
           return screen;
     }
   }
 
+  function getLoggedInScreen (user, screen){
+    if (userList.includes(user)) return screen;
+    else return <Navigate to="/login" replace/>;
+  }
+
   function getSingleScreen (chosenUser, user, screen) {
     if (chosenUser === user)
       return screen;
-    else return <Navigate to="/" replace/>;
+    else return <Navigate to="/login" replace/>;
   }
 
   return (
@@ -48,8 +54,9 @@ function App() {
           <Route exact path="/register" element={getLoggedOutScreen(user, <Register />)} />
           <Route exact path="/login" element={getLoggedOutScreen(user, <Login />)} />
           
-          <Route exact path="/" element={getSingleScreen("ROLE_USER", user, <UserDashboard />)} />
-          <Route exact path="/danger-map" element={<DangerMap mapUrl="/map1.geo.json" />} />
+          {/*Logged in screens*/}
+          <Route exact path="/" element={getLoggedInScreen(user, <Dashboard />)} />
+          <Route exact path="/danger-map" element={getLoggedInScreen(user, <DangerMap />)} />
         </Route>
       </Routes>
     </Router>
