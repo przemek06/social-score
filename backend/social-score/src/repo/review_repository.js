@@ -37,11 +37,12 @@ const getReviews = async () => {
         join user_ u on u.pesel = r.subject 
     `
 
-    return await pool.query(query, []).rows
+    return (await pool.query(query, [])).rows
 
 }
 
 module.exports = {
     insertReview,
-    getReviewBySubject
+    getReviewBySubject,
+    getReviews
 }

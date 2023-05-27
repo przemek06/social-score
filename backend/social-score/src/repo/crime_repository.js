@@ -1,9 +1,9 @@
 const pool = require("./pool")
 
 const insertCrime = async (crime) => {
-    const name = review["name"]
-    const weight = review["weight"]
-    const subject = review["subject"]
+    const name = crime["name"]
+    const weight = crime["weight"]
+    const subject = crime["subject"]
 
     const query = `
         INSERT INTO crime 
@@ -14,17 +14,20 @@ const insertCrime = async (crime) => {
         RETURNING *
     `
 
-    return await pool.query(query, [name, weight, subject]).rows
+    return (await pool.query(query, [name, weight, subject])).rows
 }
 
-const getReviewBySubject = async (pesel) => {
+const getCrimeBySubject = async (pesel) => {
 
     const query = `
-        select r.* from review r
-        join user_ u on r.subject = u.pesel
+        select c.* from crime c
+        join user_ u on c.subject = u.pesel
         where u.pesel = $1
     `
 
     return await pool.query(query, [pesel]).rows
+}
 
+module.exports = {
+    insertCrime
 }

@@ -1,9 +1,9 @@
 const pool = require("./pool")
 
 const insertGoodAct = async (goodAct) => {
-    const name = review["name"]
-    const weight = review["weight"]
-    const subject = review["subject"]
+    const name = goodAct["name"]
+    const weight = goodAct["weight"]
+    const subject = goodAct["subject"]
 
     const query = `
         INSERT INTO good_act 
@@ -14,7 +14,7 @@ const insertGoodAct = async (goodAct) => {
         RETURNING *
     `
 
-    return await pool.query(query, [name, weight, subject]).rows
+    return (await pool.query(query, [name, weight, subject])).rows
 }
 
 const getGoodActBySubject = async (pesel) => {
@@ -25,8 +25,11 @@ const getGoodActBySubject = async (pesel) => {
         where u.pesel = $1
     `
 
-    return await pool.query(query, [pesel]).rows
+    return (await pool.query(query, [pesel])).rows
 
 }
 
-
+module.exports = {
+    insertGoodAct,
+    getGoodActBySubject
+}

@@ -2,6 +2,7 @@ const pool = require("./pool")
 
 const dropTables = async () => {
     const query = `
+        DROP table IF EXISTS good_act;
         DROP table IF EXISTS crime;
         DROP table IF EXISTS review;
         DROP table IF EXISTS user_;
