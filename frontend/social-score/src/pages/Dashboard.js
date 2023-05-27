@@ -4,6 +4,25 @@ import SearchBox from "../components/Searchbox";
 import ReviewList from "../components/ReviewList";
 import UserList from "../components/UserList";
 
+const loadReviewData = async (pesel) => {
+    let response = await fetch("localhost:5000/review" + "/{pesel}", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+      referrerPolicy: "no-referrer",
+    });
+  
+    if (response.status == 200) {
+      let json = await response.json()
+      return json
+    } else {
+      console.log("error")
+    }
+  }
+
 export default function Dashboard() {
     const [searchText, setSearchText] = useState("");
     const [reviews, setReviews] = useState([
@@ -35,6 +54,10 @@ export default function Dashboard() {
         },
     ]);
     const [selectedUserId, setSelectedUserId] = useState("");
+
+    useEffect(() => {
+        loadReviewData(selectedUserId);
+      }, [selectedUserId]);
 
     return (
         <div style={{padding: '20px'}}>

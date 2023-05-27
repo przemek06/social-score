@@ -2,15 +2,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, redirect, Navigate } from 'react-router-dom';
 import ProtectedRoutes from './navigation/ProtectedRoutes';
-import UserDashboard from './pages/UserDashboard';
 import DangerMap from './pages/DangerMap';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import useLocalStorage, {userRoleKey} from './hooks/LocalStorageHook';
 
 function App() {
-  const userList = ['ROLE_USER', 'ROLE_ADMIN'];
-  const [user, setUser] = useState('ROLE_USER');
+  const userList = ['User', 'Admin'];
+  const [user, setUser, removeUser] = useLocalStorage(userRoleKey, "")
   
   const hiddenNavbarRoutes = []
 
@@ -52,7 +52,7 @@ function App() {
         <Route element={<ProtectedRoutes user={user} isHidden={hiddenNavbarRoutes.includes(window.location.pathname)}/>}>
           {/*Logged out screens*/}
           <Route exact path="/register" element={getLoggedOutScreen(user, <Register />)} />
-          <Route exact path="/login" element={getLoggedOutScreen(user, <Login />)} />
+          <Route exact path="/login" element={getLoggedOutScreen(user, <Login onUserChange={(v) => setUser(v)}/>)} />
           
           {/*Logged in screens*/}
           <Route exact path="/" element={getLoggedInScreen(user, <Dashboard />)} />
