@@ -97,8 +97,8 @@ export default function DangerMap() {
   const colorScale = scaleLinear().domain([0, 10]).range(["#a72bb5", "#0376db"])
   let regions = data
 
-  var legend = d3.legendColor()
-    .scale(colorScale);
+  // var legend = d3.legendColor()
+  //   .scale(colorScale);
 
   return (
     <div>
