@@ -19,7 +19,6 @@ const uploadReviewData = async (data) => {
   
     if (response.status == 200) {
       let json = await response.json()
-      setReviews(json)
       return json
     } else {
       console.log("error")
