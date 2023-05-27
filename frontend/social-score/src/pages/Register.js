@@ -1,5 +1,27 @@
 import React, { useState, useEffect } from "react"
 import { Container, Form, Button, Dropdown,  Row, Col, Nav  } from 'react-bootstrap';
+import { redirect } from "react-router-dom";
+
+const loadReviewData = async (data) => {
+    let requestBody = JSON.stringify(data);
+    let response = await fetch("http://localhost:5000/auth/register", {
+      method: "POST",
+      body: requestBody,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+      referrerPolicy: "no-referrer",
+    });
+  
+    if (response.status == 200) {
+      let json = await response.json()
+      return json
+    } else {
+      console.log("error")
+    }
+  }
 
 const DropdownComponent = () => {
     return (
@@ -34,7 +56,8 @@ const Register = () => {
   
     const handleRegister = (e) => {
       e.preventDefault();
-      // Handle registration logic here
+      loadReviewData(data);
+      redirect("/");
     };
 
     const onDataChange = (e, value) => {
@@ -110,7 +133,7 @@ const Register = () => {
                             <Form.Control
                             type="text"
                             placeholder="Wpisz imię"
-                            value={data.pesel}
+                            value={data.name}
                             onChange={(e) => onDataChange(e, 'name')}
                             />
                         </Form.Group>
