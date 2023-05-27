@@ -64,7 +64,7 @@ export default function DangerMap() {
     parseDistricts(setDistricts)
     const interval = setInterval(() => {
       mapDistricts(districts, setData)
-      time = 1000 * getRandomNumber()
+      setTime(1000 * getRandomNumber())
     }, time); 
     return () => {
       clearInterval(interval);
@@ -83,7 +83,7 @@ export default function DangerMap() {
   };
 
   const colorScale = scaleLinear().domain([0, 10]).range(["#a72bb5", "#0376db"])
-  const regions = data
+  let regions = data
 
   return (
     <div>
