@@ -1,29 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Container, Col, Row  } from 'react-bootstrap';
 import SearchBox from "../components/Searchbox";
-import ReviewList from "../components/ReviewList";
 import UserList from "../components/UserList";
-
-const loadReviewData = async (pesel, setReviews) => {
-    let response = await fetch("http://localhost:5000/review/" + pesel, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "omit",
-      mode: "cors",
-      referrerPolicy: "no-referrer",
-      origin: 'http://localhost:3000'
-    });
-  
-    if (response.status == 200) {
-      let json = await response.json()
-      setReviews(json)
-      return json
-    } else {
-      console.log("error")
-    }
-  }
 
   const loadUserData = async (name, surname) => {
     let response = await fetch("http://localhost:5000/user/" + name + "/" + surname, {
@@ -45,12 +23,32 @@ const loadReviewData = async (pesel, setReviews) => {
     }
   }
 
+function ReviewInput({onDataChange, onNumberChange, onSubmit}) {
+    return(
+        <Form>
+            <FormControl type="number" placeholder="Wprowadź ocenę od 1-10" onTextChange={onNumberChange}/>
+            <FormControl type="text" placeholder="Opisz swoją recenzję" onTextChange={onDataChange}/>
+            <Button variant="primary" onClick={onSubmit}>Submit</Button>
+        </Form>
+    );
+}
 
-export default function Dashboard() {
+export default function AddReview() {
     const [searchText, setSearchText] = useState("");
-    const [reviews, setReviews] = useState([]);
     const [users, setUsers] = useState([]);
-    const [selectedUserId, setSelectedUserId] = useState("");
+    const [selectedUserId, setSelectedUserId] = useState(0);
+
+    const onDataChange = (e) => {
+        let newData = {...reviewData};
+        newData.description = e.target.value;
+        setReviewData(newData);
+    }
+
+    const onNumberChange = (e) => {
+        let newData = {...reviewData};
+        newData.rating = parseInt(e.target.value,10);
+        setReviewData(newData);
+    }
 
     const onSearchClick = async () => {
         let words = searchText.split(" ");
@@ -58,9 +56,14 @@ export default function Dashboard() {
         setUsers(users);
     }
 
-    useEffect(() => {
-        loadReviewData(selectedUserId, setReviews);
-      }, [selectedUserId]);
+    const onSubmit = () => {
+        let newData = {
+            ...reviewData,
+            subject: selectedUserId,
+            author: selectedUserId
+        };
+        loadReviewData(newData);
+    }
 
     return (
         <div style={{padding: '20px'}}>
@@ -72,7 +75,7 @@ export default function Dashboard() {
                     <UserList users={users} selectedUserId={selectedUserId} onClick={(id) => setSelectedUserId(id)}/>
                 </Col>
                 <Col md={8} style={{ paddingLeft: '60px', paddingRight: '20px' }}>
-                    <ReviewList reviews={reviews} />
+                    <ReviewInput onDataChange={onDataChange} onNumberChange={onNumberChange} onSubmit={onSubmit} />
                 </Col>
                 </Row>
             </Container>
