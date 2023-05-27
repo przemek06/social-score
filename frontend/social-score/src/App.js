@@ -7,6 +7,8 @@ import DangerMap from './pages/DangerMap';
 import Register from './pages/Register';
 import Login from './pages/Login';
 
+const geoUrl = "https://raw.githubusercontent.com/ppatrzyk/polska-geojson/master/miasta/wroclaw-max.geojson"
+
 function App() {
   const userList = ['ROLE_USER', 'ROLE_ADMIN'];
   const [user, setUser] = useState('');
@@ -54,6 +56,30 @@ function App() {
       </Routes>
     </Router>
   );
+}
+
+
+const isCoordinateInsideArea = (coordinate, areaEdges) => {
+  const [x, y] = coordinate;
+
+  let isInside = false;
+  for (let i = 0, j = areaEdges.length - 1; i < areaEdges.length; j = i++) {
+    const [edgeX1, edgeY1] = areaEdges[i];
+    const [edgeX2, edgeY2] = areaEdges[j];
+
+    const isCoordinateBetweenEdges = ((edgeY1 > y) !== (edgeY2 > y)) &&
+      (x < (edgeX2 - edgeX1) * (y - edgeY1) / (edgeY2 - edgeY1) + edgeX1);
+
+    if (isCoordinateBetweenEdges) {
+      isInside = !isInside;
+    }
+  }
+
+  return isInside;
+}
+
+const findDistrict = (coordinate, ) => {
+  
 }
 
 export default App;
