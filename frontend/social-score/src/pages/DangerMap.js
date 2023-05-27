@@ -11,9 +11,8 @@ console.log(json.district)
 const geoUrl = "https://raw.githubusercontent.com/ppatrzyk/polska-geojson/master/miasta/wroclaw-max.geojson"
 // poland map -> "https://raw.githubusercontent.com/ppatrzyk/polska-geojson/master/wojewodztwa/wojewodztwa-max.geojson"
 
-
-export default function DangerMap({ mapUrl }) {
-  const [position, setPosition] = useState({ coordinates: [16.89, 51.11], zoom: 58 })
+export default function DangerMap() {
+const [position, setPosition] = useState({coordinates:[16.89,51.11], zoom:58})
 
   const handleMoveEnd = (pos) => {
     console.log(pos);

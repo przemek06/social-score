@@ -2,17 +2,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, redirect, Navigate } from 'react-router-dom';
 import ProtectedRoutes from './navigation/ProtectedRoutes';
-import UserDashboard from './pages/UserDashboard';
 import DangerMap from './pages/DangerMap';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import useLocalStorage, {userRoleKey} from './hooks/LocalStorageHook';
 
 const geoUrl = "https://raw.githubusercontent.com/ppatrzyk/polska-geojson/master/miasta/wroclaw-max.geojson"
 
 function App() {
   const userList = ['USER', 'ADMIN'];
-  const [user, setUser] = useState('');
-  const [isFirst, setFirst] = useState(true)
+  const [user, setUser, removeUser] = useLocalStorage(userRoleKey, "");
+  const [isFirst, setFirst] = useState(true);
 
   useEffect(() => {
     if (isFirst) {
@@ -40,16 +41,21 @@ function App() {
     switch(user) {
       case "USER":
       case "ADMIN":
-        return <Navigate to="/" replace/>;
+        return <Navigate to="/login" replace/>;
       default:
           return screen;
     }
   }
 
+  function getLoggedInScreen (user, screen){
+    if (userList.includes(user)) return screen;
+    else return <Navigate to="/login" replace/>;
+  }
+
   function getSingleScreen (chosenUser, user, screen) {
     if (chosenUser === user)
       return screen;
-    else return <Navigate to="/" replace/>;
+    else return <Navigate to="/login" replace/>;
   }
 
   return (
@@ -58,10 +64,11 @@ function App() {
         <Route element={<ProtectedRoutes user={user} isHidden={hiddenNavbarRoutes.includes(window.location.pathname)}/>}>
           {/*Logged out screens*/}
           <Route exact path="/register" element={getLoggedOutScreen(user, <Register />)} />
-          <Route exact path="/login" element={getLoggedOutScreen(user, <Login />)} />
+          <Route exact path="/login" element={getLoggedOutScreen(user, <Login onUserChange={(v) => setUser(v)}/>)} />
           
-          <Route exact path="/" element={getSingleScreen("ROLE_USER", user, <UserDashboard />)} />
-          <Route exact path="/danger-map" element={<DangerMap mapUrl="/map1.geo.json" />} />
+          {/*Logged in screens*/}
+          <Route exact path="/" element={getLoggedInScreen(user, <Dashboard />)} />
+          <Route exact path="/danger-map" element={getLoggedInScreen(user, <DangerMap />)} />
         </Route>
       </Routes>
     </Router>
