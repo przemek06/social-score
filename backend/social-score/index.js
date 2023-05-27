@@ -8,7 +8,7 @@ const database = async () => {
   await setupDatabase()
 
 }
- // initialize database
+// initialize database
 database()
 
 const app = express();
@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 require("./src/start/routes")(app);
 
 app.use(function(err, req, res, next) {
-  res.status(500).send(res.sentry);
+  res.status(500).send(err);
 })
 
 const port = process.env.PORT || 5000;
