@@ -39,33 +39,45 @@ const loadGeoData = async () => {
 
 const parseDistricts = async (setDistricts) => {
   let json = await loadGeoData()
+  console.log(json)
   let os = json["features"].map(
     f => f["properties"]["osiedle"]
   )
+  console.log(os)
 
   setDistricts(os)
 }
 
-const mapDistricts = (districts, setData) => {
-  const a =  districts.map(d => {
+const mapDistricts = async (districts, setData) => {
+
+  let json = await loadGeoData()
+  let os = json["features"].map(
+    f => f["properties"]["osiedle"]
+  )
+  console.log(districts)
+  const a =  os.map(d => {
     return {id: d, rating: Math.random() * 10}
   }
   )
+  console.log(a)
   setData(a)
 }
 
 export default function DangerMap() {
   const [position, setPosition] = useState({ coordinates: [16.89, 51.11], zoom: 58 })
-  const [time, setTime] = useState(5)
+  const [time, setTime] = useState(5000)
   const [districts, setDistricts] = useState([])
   const [data, setData] = useState([])
 
   useEffect(() => {
-    parseDistricts(setDistricts)
+    if (districts.length == 0) {
+      parseDistricts(setDistricts)
+
+    }
     const interval = setInterval(() => {
       mapDistricts(districts, setData)
-      setTime(1000 * getRandomNumber())
-    }, time); 
+    }, 10000); 
+    
     return () => {
       clearInterval(interval);
     };
@@ -84,6 +96,9 @@ export default function DangerMap() {
 
   const colorScale = scaleLinear().domain([0, 10]).range(["#a72bb5", "#0376db"])
   let regions = data
+
+  var legend = d3.legendColor()
+    .scale(colorScale);
 
   return (
     <div>
