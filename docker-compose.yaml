@@ -41,12 +41,5 @@ services:
     expose:
       - "5000"
 
-  flask:
-      build: './flaskmodel'
-      ports:
-        - '4999:4999'
-      expose:
-        - "4999"
-      networks:
-        - social-score-network
+
     
