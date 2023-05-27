@@ -30,14 +30,14 @@ router.post("/login", async (req, res) => {
 
   await call(async () => {
     const { error, value } = validatePesel(req.body.pesel);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(401).send(error.details[0].message);
 
     const user = await selectUserByPesel(value);
-    if (user.length !== 1) return res.status(400).send("Invalid pesel or password.");
+    if (user.length !== 1) return res.status(402).send("Invalid pesel or password.");
     const userData = user[0];
 
     const validPassword = await compare(req.body.password, userData.password);
-    if (!validPassword) return res.status(400).send("Invalid pesel or password.");
+    if (!validPassword) return res.status(403).send("Invalid pesel or password.");
     
     const token = generateJwtToken(userData.id, userData.pesel, userData.email, userData.name, userData.surname);
 

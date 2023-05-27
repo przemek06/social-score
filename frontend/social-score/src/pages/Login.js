@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Container, Form, Button, Dropdown,  Row, Col, Nav  } from 'react-bootstrap';
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const loadReviewData = async (data) => {
     let requestBody = JSON.stringify(data);
@@ -10,9 +10,10 @@ const loadReviewData = async (data) => {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
+      credentials: "omit",
       mode: "cors",
       referrerPolicy: "no-referrer",
+      origin: 'http://localhost:3000'
     });
   
     if (response.status == 200) {
@@ -24,15 +25,17 @@ const loadReviewData = async (data) => {
   }
 
 const Login = ({onUserChange}) => {
+    const navigate = useNavigate();
+
     const [data, setData] = useState({
         pesel: "",
         password: "",
     });
   
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
       e.preventDefault();
-      let user = loadReviewData();
-      redirect("/");
+      let user = await loadReviewData(data);
+      navigate("/");
       onUserChange(user.role);
     };
 

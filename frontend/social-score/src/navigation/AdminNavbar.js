@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
-export default function UserNavbar({onLogout}) {
+export default function AdminNavbar({onLogout}) {
   const [showNav, setShowNav] = useState(true);
 
   return (
@@ -13,6 +13,8 @@ export default function UserNavbar({onLogout}) {
           <Nav className="me-auto">
             <Nav.Link href="/danger-map">Danger map</Nav.Link>
             <Nav.Link href="/add_review">Add review</Nav.Link>
+            <Nav.Link href="/add_crime">Register crimes</Nav.Link>
+            <Nav.Link href="/add_good">Register good deeds</Nav.Link>
             <Nav.Link onClick={onLogout}>Logout</Nav.Link>
           </Nav>
         </Container>

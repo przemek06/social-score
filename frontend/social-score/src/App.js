@@ -15,6 +15,11 @@ function App() {
   const [user, setUser, removeUser] = useLocalStorage(userRoleKey, "");
   const [isFirst, setFirst] = useState(true);
 
+  const onUserChange = (u) => {
+    setUser(u);
+    console.log(u)
+    console.log(user)
+  }
   // useEffect(() => {
   //   if (isFirst) {
   //     sendCurrentLocation()
@@ -61,7 +66,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route element={<ProtectedRoutes user={user} isHidden={hiddenNavbarRoutes.includes(window.location.pathname)}/>}>
+        <Route element={<ProtectedRoutes user={user} isHidden={hiddenNavbarRoutes.includes(window.location.pathname)} onLogout={() => removeUser()}/>}>
           {/*Logged out screens*/}
           <Route exact path="/register" element={getLoggedOutScreen(user, <Register />)} />
           <Route exact path="/login" element={getLoggedOutScreen(user, <Login onUserChange={(v) => setUser(v)}/>)} />
