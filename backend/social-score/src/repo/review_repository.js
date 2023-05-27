@@ -33,7 +33,8 @@ const getReviewBySubject = async (pesel) => {
 const getReviews = async () => {
 
     const query = `
-        select * from review
+        select * from review r
+        join user_ u on u.pesel = r.subject 
     `
 
     return await pool.query(query, []).rows
