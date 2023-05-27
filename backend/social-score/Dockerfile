@@ -1,4 +1,4 @@
-FROM node:19-alpine3.16
+FROM node:18.16.0
 
 # install app dependencies
 COPY package.json /app/
