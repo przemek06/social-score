@@ -3,11 +3,57 @@ const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const setupDatabase = require("./src/repo/create_tables");
 const { selectUserByPesel, insertUser } = require("./src/repo/user_repository")
+const json1 = {
+  pesel: "12345678901",
+  email: "example1@example.com",
+  name: "John",
+  role: "ADMIN",
+  surname: "Doe",
+  password: "password123",
+  height: 180,
+  weight: 75,
+  education: 3,
+  address: "123 Main St",
+  city: "Wrocław",
+  zipCode: "50-000"
+};
+
+const json2 = {
+  pesel: "98765432109",
+  email: "example2@example.com",
+  name: "Jane",
+  role: "USER",
+  surname: "Smith",
+  password: "securepassword",
+  height: 165,
+  weight: 60,
+  education: 2,
+  address: "456 Elm St",
+  city: "Wrocław",
+  zipCode: "51-000"
+};
+
+const json3 = {
+  pesel: "54321098765",
+  email: "example3@example.com",
+  name: "David",
+  role: "USER",
+  surname: "Johnson",
+  password: "pass123",
+  height: 175,
+  weight: 80,
+  education: 3,
+  address: "789 Oak St",
+  city: "Wrocław",
+  zipCode: "52-000"
+};
 
 
 const database = async () => {
   await setupDatabase()
-  await insertUser({pesel: "11122233344", role: "ADMIN", password: "pass"})
+  await insertUser(json1)
+  await insertUser(json2)
+  await insertUser(json3)
 
 }
 // initialize database

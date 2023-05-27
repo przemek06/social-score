@@ -43,11 +43,11 @@ const parseDistricts = async (setDistricts) => {
     f => f["properties"]["osiedle"]
   )
 
-  setDistricts(osiedle)
+  setDistricts(os)
 }
 
 const mapDistricts = (districts, setData) => {
-  a =  districts.map(d => {
+  const a =  districts.map(d => {
     return {id: d, rating: Math.random() * 10}
   }
   )
