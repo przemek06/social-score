@@ -1,7 +1,30 @@
 import React, { useState, useEffect } from "react"
-import { Container, Col, Row  } from 'react-bootstrap';
+import { Container, Col, Row, Form, FormControl, Button  } from 'react-bootstrap';
 import SearchBox from "../components/Searchbox";
 import UserList from "../components/UserList";
+
+const uploadReviewData = async (data) => {
+    let requestBody = JSON.stringify(data);
+    let response = await fetch("http://localhost:5000/review", {
+      method: "POST",
+      body: requestBody,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "omit",
+      mode: "cors",
+      referrerPolicy: "no-referrer",
+      origin: 'http://localhost:3000'
+    });
+  
+    if (response.status == 200) {
+      let json = await response.json()
+      setReviews(json)
+      return json
+    } else {
+      console.log("error")
+    }
+  }
 
   const loadUserData = async (name, surname) => {
     let response = await fetch("http://localhost:5000/user/" + name + "/" + surname, {
@@ -37,6 +60,7 @@ export default function AddReview() {
     const [searchText, setSearchText] = useState("");
     const [users, setUsers] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState(0);
+    const [reviewData, setReviewData] = useState(0);
 
     const onDataChange = (e) => {
         let newData = {...reviewData};
@@ -62,7 +86,7 @@ export default function AddReview() {
             subject: selectedUserId,
             author: selectedUserId
         };
-        loadReviewData(newData);
+        uploadReviewData(newData);
     }
 
     return (
