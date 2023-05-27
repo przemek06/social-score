@@ -1,8 +1,6 @@
 const Joi = require("joi");
-const jwt = require("jsonwebtoken");
 
 const peselSchema = Joi.string().regex(/^[0-9]{11}$/, "pesel").required();
-const { JWT_KEY } = require("../utils/config.js");
 
 const schema = Joi.object({
 
@@ -31,19 +29,6 @@ const schema = Joi.object({
 
 });
 
-const generateJwtToken = (id, pesel, email, name, surname) => {
-  return jwt.sign(
-    {
-      id,
-      pesel,
-      email,
-      name,
-      surname
-    },
-    JWT_KEY
-  );
-};
-
 validatePesel = (pesel) => {
   return peselSchema.validate(pesel);
 }
@@ -54,7 +39,6 @@ validateUser = (user) => {
 
 module.exports = {
   schema,
-  generateJwtToken,
   validateUser,
   validatePesel
 }

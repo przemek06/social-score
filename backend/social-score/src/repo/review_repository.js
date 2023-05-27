@@ -15,7 +15,7 @@ const insertReview = async (review) => {
         RETURNING *
     `
 
-    return await pool.query(query, [rating, description, subject, author]).rows
+    return (await pool.query(query, [rating, description, subject, author])).rows
 }
 
 const getReviewBySubject = async (pesel) => {
@@ -26,7 +26,11 @@ const getReviewBySubject = async (pesel) => {
         where u.pesel = $1;
     `
 
-    return await pool.query(query, [pesel]).rows
+    return (await pool.query(query, [pesel])).rows
 
 }
 
+module.exports = {
+    insertReview,
+    getReviewBySubject
+}

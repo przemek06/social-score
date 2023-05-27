@@ -19,7 +19,7 @@ const insertUser = async (user) => {
         INSERT INTO user_ 
         (pesel, email, "name", role, surname, "password", "height", weight, education, address, city, zipCode) 
         VALUES (
-            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
         ) 
         RETURNING *
     `
