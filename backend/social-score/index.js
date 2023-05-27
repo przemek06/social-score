@@ -3,6 +3,9 @@ const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const setupDatabase = require("./src/repo/create_tables");
 const { selectUserByPesel, insertUser } = require("./src/repo/user_repository")
+const { insertReview } = require("./src/repo/review_repository")
+
+
 const json1 = {
   pesel: "12345678901",
   email: "example1@example.com",
@@ -48,13 +51,28 @@ const json3 = {
   zipCode: "52-000"
 };
 
+const json4 = {
+  subject: "12345678901",
+  author: "54321098765",
+  rating: 9,
+  description: "Good friend!"
+}
+
+const json5 = {
+  subject: "12345678901",
+  author: "98765432109",
+  rating: 7,
+  description: "Good at cooking!"
+}
+
 
 const database = async () => {
   await setupDatabase()
   await insertUser(json1)
   await insertUser(json2)
   await insertUser(json3)
-
+  await insertReview(json4)
+  await insertReview(json5)
 }
 // initialize database
 database()
