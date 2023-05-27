@@ -65,7 +65,7 @@ const createCrimeTable = async () => {
 
 const createGoodActsTable = async () => {
     const query = `
-    CREATE TABLE IF NOT EXISTS good_acts (
+    CREATE TABLE IF NOT EXISTS good_act (
         id SERIAL not null,
         "name" VARCHAR(64),
         weight INT,
