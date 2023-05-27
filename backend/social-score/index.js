@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require('cookie-parser');
 const setupDatabase = require("./src/repo/create_tables");
 const { selectUserByPesel } = require("./src/repo/user_repository")
 
@@ -7,17 +8,20 @@ const database = async () => {
   await setupDatabase()
 
 }
- // initialize database
+// initialize database
 database()
 
 const app = express();
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({
+  origin: '*'
+}));
 app.use(express.urlencoded({ extended: true }));
 
 require("./src/start/routes")(app);
 
 app.use(function(err, req, res, next) {
-  res.status(500).send(res.sentry);
+  res.status(500).send(err);
 })
 
 const port = process.env.PORT || 5000;

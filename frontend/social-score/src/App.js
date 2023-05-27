@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, redirect, Navigate } from 'react-router-dom';
 import ProtectedRoutes from './navigation/ProtectedRoutes';
 import DangerMap from './pages/DangerMap';
@@ -8,17 +8,29 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import useLocalStorage, {userRoleKey} from './hooks/LocalStorageHook';
 
+const geoUrl = "https://raw.githubusercontent.com/ppatrzyk/polska-geojson/master/miasta/wroclaw-max.geojson"
+
 function App() {
-  const userList = ['User', 'Admin'];
-  const [user, setUser, removeUser] = useLocalStorage(userRoleKey, "")
+  const userList = ['USER', 'ADMIN'];
+  const [user, setUser, removeUser] = useLocalStorage(userRoleKey, "");
+  const [isFirst, setFirst] = useState(true);
+
+  useEffect(() => {
+    if (isFirst) {
+      sendCurrentLocation()
+      setFirst(false)
+    }
+  },
+  []
+  )
   
   const hiddenNavbarRoutes = []
 
   function getScreen (user, userScreen, adminScreen){
     switch(user) {
-      case "ROLE_USER":
+      case "USER":
         return userScreen;
-      case "ROLE_ADMIN":
+      case "ADMIN":
           return adminScreen;
       default:
           return <Navigate to="/join_us" replace/>;
@@ -27,8 +39,8 @@ function App() {
   
   function getLoggedOutScreen (user, screen){
     switch(user) {
-      case "ROLE_USER":
-      case "ROLE_ADMIN":
+      case "USER":
+      case "ADMIN":
         return <Navigate to="/login" replace/>;
       default:
           return screen;
@@ -61,6 +73,66 @@ function App() {
       </Routes>
     </Router>
   );
+}
+
+
+const isCoordinateInsideArea = (coordinate, areaEdges) => {
+  const [x, y] = coordinate;
+
+  let isInside = false;
+  for (let i = 0, j = areaEdges.length - 1; i < areaEdges.length; j = i++) {
+    const [edgeX1, edgeY1] = areaEdges[i];
+    const [edgeX2, edgeY2] = areaEdges[j];
+
+    const isCoordinateBetweenEdges = ((edgeY1 > y) !== (edgeY2 > y)) &&
+      (x < (edgeX2 - edgeX1) * (y - edgeY1) / (edgeY2 - edgeY1) + edgeX1);
+
+    if (isCoordinateBetweenEdges) {
+      isInside = !isInside;
+    }
+  }
+
+  return isInside;
+}
+
+const loadGeoData = async () => {
+  let response = await fetch("geoUrl", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    mode: "cors",
+    referrerPolicy: "no-referrer",
+  });
+
+  if (response.status == 200) {
+    let json = await response.json()
+    return json
+  } else {
+    console.log("error")
+  }
+}
+
+const findDistrict = async (coordinate) => {
+  const data = await loadGeoData()
+
+  const coordinates = data["features"]
+  const district = coordinate.filter(
+    (c) => isCoordinateInsideArea(coordinate, coordinates["geometry"][coordinates][0])
+  )
+
+  return {
+    latitude: coordinate[0],
+    longitude: coordinate[1],
+    district: district[0]["properties"]["osiedle"]
+  }
+}
+
+const sendCurrentLocation = async () => {
+  coordinate = [position.coords.latitude, position.coords.longitude]
+  const loc = findDistrict(coordinate)
+  console.log(loc)
 }
 
 export default App;

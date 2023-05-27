@@ -17,9 +17,22 @@ from flask import Flask, request
 # create the Flask app
 app = Flask(__name__)
 
+
+import psycopg2
+conn = psycopg2.connect(database="postgres",
+                        host="db",
+                        user="postgres",
+                        password="postgres",
+                        port="5432")
+
+cursor = conn.cursor()
+
+
 def pesel_to_score(pesel):
-
-
+    crime = cursor.execute(f"SELECT weight FROM crime WHERE subject == {pesel}")
+    rating = cursor.execute(f"SELECT rating FROM review WHERE subject == {pesel}")
+    user = cursor.execute(f"SELECT height, weight, education FROM user_ WHERE pesel == {pesel}")
+    
 
     return "score"
 

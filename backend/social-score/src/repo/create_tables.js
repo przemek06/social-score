@@ -2,6 +2,7 @@ const pool = require("./pool")
 
 const dropTables = async () => {
     const query = `
+        DROP table IF EXISTS good_act;
         DROP table IF EXISTS crime;
         DROP table IF EXISTS review;
         DROP table IF EXISTS user_;
@@ -63,11 +64,26 @@ const createCrimeTable = async () => {
     await pool.query(query)
 }
 
+const createGoodActsTable = async () => {
+    const query = `
+    CREATE TABLE IF NOT EXISTS good_act (
+        id SERIAL not null,
+        "name" VARCHAR(64),
+        weight INT,
+        subject VARCHAR(11)  references user_(pesel),
+        PRIMARY KEY(id)
+    )  
+    `
+
+    await pool.query(query)
+}
+
 const setupDatabase = async () => {
     await dropTables()
     await createUserTable()
     await createReviewTable()
     await createCrimeTable()
+    await createGoodActsTable()
 }
 
 module.exports = setupDatabase

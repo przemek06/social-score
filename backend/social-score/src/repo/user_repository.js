@@ -19,7 +19,7 @@ const insertUser = async (user) => {
         INSERT INTO user_ 
         (pesel, email, "name", role, surname, "password", "height", weight, education, address, city, zipCode) 
         VALUES (
-            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
         ) 
         RETURNING *
     `
@@ -32,11 +32,20 @@ const selectUserByPesel = async (pesel) => {
         SELECT * FROM user_ WHERE PESEL = $1
     `
 
-    return (await pool.query(query, [pesel])).rows
+    return (await pool.query(query, [pesel])).rows;
 
+}
+
+const selectUserByFullName = async (name, surname) => {
+    const query = `
+        SELECT * FROM user_ WHERE "name" = $1 AND surname = $2
+    `
+
+    return (await pool.query(query, [name, surname])).rows
 }
 
 module.exports = {
     insertUser,
-    selectUserByPesel
+    selectUserByPesel,
+    selectUserByFullName
 }
