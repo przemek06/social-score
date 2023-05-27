@@ -89,7 +89,7 @@ const isCoordinateInsideArea = (coordinate, areaEdges) => {
 }
 
 const loadGeoData = async () => {
-  let response = await fetch("geoUrl", {
+  let response = await fetch(geoUrl, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -123,8 +123,12 @@ const findDistrict = async (coordinate) => {
 }
 
 const sendCurrentLocation = async () => {
-  coordinate = [position.coords.latitude, position.coords.longitude]
-  const loc = findDistrict(coordinate)
+  const position = await new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+  const { latitude, longitude } = position.coords;
+  const coordinate = [latitude, longitude]
+  const loc = await findDistrict(coordinate)
   console.log(loc)
 }
 
