@@ -1,13 +1,19 @@
 const Joi = require("joi");
 
 const peselSchema = Joi.string().regex(/^[0-9]{11}$/, "pesel").required();
+const nameSchema = Joi.string().min(1).max(50).required();
+const surnameSchema = Joi.string().min(1).max(50).required();
+
+const namesSchema = Joi.object({
+  name: nameSchema,
+  surname: surnameSchema
+});
 
 const schema = Joi.object({
-
   pesel: peselSchema,
   email: Joi.string().email().required(),
-  name: Joi.string().min(1).max(50).required(),
-  surname: Joi.string().min(1).max(50).required(),
+  name: nameSchema,
+  surname: surnameSchema,
 
   password: Joi.string().min(8).required(),
 
@@ -26,11 +32,14 @@ const schema = Joi.object({
   address: Joi.string().min(2).max(200).required(),
   city: Joi.string().min(2).max(50).required(),
   zipCode: Joi.string().regex(/[0-9]{2}-[0-9]{3}/, "zip code").required(),
-
 });
 
 validatePesel = (pesel) => {
   return peselSchema.validate(pesel);
+}
+
+validateNames = (names) => {
+  return namesSchema.validate(names);
 }
 
 validateUser = (user) => {
@@ -40,5 +49,6 @@ validateUser = (user) => {
 module.exports = {
   schema,
   validateUser,
-  validatePesel
+  validatePesel,
+  validateNames
 }
