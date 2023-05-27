@@ -106,16 +106,29 @@ const isCoordinateInsideArea = (coordinate, areaEdges) => {
   return isInside;
 }
 
+function inside(point, vs) {
+  // ray-casting algorithm based on
+  // https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
+  
+  var x = point[0], y = point[1];
+  
+  var inside = false;
+  for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+      var xi = vs[i][0], yi = vs[i][1];
+      var xj = vs[j][0], yj = vs[j][1];
+      
+      var intersect = ((yi > y) != (yj > y))
+          && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+      if (intersect) inside = !inside;
+  }
+  
+  return inside;
+};
+
+
 const loadGeoData = async () => {
-  let response = await fetch(geoUrl, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    mode: "cors",
-    referrerPolicy: "no-referrer",
-  });
+
+  let response = await fetch(geoUrl);
 
   if (response.status == 200) {
     let json = await response.json()
@@ -127,11 +140,16 @@ const loadGeoData = async () => {
 
 const findDistrict = async (coordinate) => {
   const data = await loadGeoData()
-
+  console.log(data)
   const coordinates = data["features"]
-  const district = coordinate.filter(
-    (c) => isCoordinateInsideArea(coordinate, coordinates["geometry"][coordinates][0])
+  const district = coordinates.filter(
+    (c) => {
+      inside(coordinate, c["geometry"]["coordinates"][0])
+    }
   )
+  console.log(coordinate)
+
+  console.log(district)
 
   return {
     latitude: coordinate[0],
@@ -145,7 +163,8 @@ const sendCurrentLocation = async () => {
     navigator.geolocation.getCurrentPosition(resolve, reject);
   });
   const { latitude, longitude } = position.coords;
-  const coordinate = [latitude, longitude]
+  const coordinate = [longitude, latitude]
+
   const loc = await findDistrict(coordinate)
   console.log(loc)
 }
