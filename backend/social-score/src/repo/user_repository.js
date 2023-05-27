@@ -4,7 +4,7 @@ const insertUser = async (user) => {
     const pesel = user['pesel']
     const email = user['email']
     const name = user['name']
-    const role = "USER"
+    const role = user["role"] == null ? "USER" : user["role"]
     const surname = user['surname']
     const password = user['password']
     const height = user['height']

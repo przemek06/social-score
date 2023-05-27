@@ -2,10 +2,12 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const setupDatabase = require("./src/repo/create_tables");
-const { selectUserByPesel } = require("./src/repo/user_repository")
+const { selectUserByPesel, insertUser } = require("./src/repo/user_repository")
+
 
 const database = async () => {
   await setupDatabase()
+  await insertUser({pesel: "11122233344", role: "ADMIN", password: "pass"})
 
 }
 // initialize database
