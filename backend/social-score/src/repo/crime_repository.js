@@ -25,7 +25,7 @@ const getCrimeBySubject = async (pesel) => {
         where u.pesel = $1
     `
 
-    return await pool.query(query, [pesel]).rows
+    return (await pool.query(query, [pesel])).rows
 }
 
 module.exports = {
