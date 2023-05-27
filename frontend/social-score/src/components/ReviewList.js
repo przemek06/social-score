@@ -7,7 +7,7 @@ function Review({review}) {
             <Col style={{padding: 5}}>
                 <h4 className="text-primary">Ocena: {review.rating}</h4>
                 <hr/>
-                <p className="text-muted">{review.text}</p>
+                <p className="text-muted">{review.description}</p>
             </Col>
         </div>
     );
