@@ -36,12 +36,12 @@ const selectUserByPesel = async (pesel) => {
 
 }
 
-const selectUserByFullName = async (name, surname) {
+const selectUserByFullName = async (name, surname) => {
     const query = `
     SELECT * FROM user_ WHERE "name" = $1 AND surname = $2
     `
 
-return (await pool.query(query, [name, surname])).rows
+    return (await pool.query(query, [name, surname])).rows
 }
 
 module.exports = {

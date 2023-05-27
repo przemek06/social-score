@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, redirect, Navigate } from 'react-router-dom';
 import ProtectedRoutes from './navigation/ProtectedRoutes';
 import UserDashboard from './pages/UserDashboard';
@@ -10,16 +10,26 @@ import Login from './pages/Login';
 const geoUrl = "https://raw.githubusercontent.com/ppatrzyk/polska-geojson/master/miasta/wroclaw-max.geojson"
 
 function App() {
-  const userList = ['ROLE_USER', 'ROLE_ADMIN'];
+  const userList = ['USER', 'ADMIN'];
   const [user, setUser] = useState('');
+  const [isFirst, setFirst] = useState(true)
+
+  useEffect(() => {
+    if (isFirst) {
+      sendCurrentLocation()
+      setFirst(false)
+    }
+  },
+  []
+  )
   
   const hiddenNavbarRoutes = []
 
   function getScreen (user, userScreen, adminScreen){
     switch(user) {
-      case "ROLE_USER":
+      case "USER":
         return userScreen;
-      case "ROLE_ADMIN":
+      case "ADMIN":
           return adminScreen;
       default:
           return <Navigate to="/join_us" replace/>;
@@ -28,8 +38,8 @@ function App() {
   
   function getLoggedOutScreen (user, screen){
     switch(user) {
-      case "ROLE_USER":
-      case "ROLE_ADMIN":
+      case "USER":
+      case "ADMIN":
         return <Navigate to="/" replace/>;
       default:
           return screen;
@@ -78,8 +88,44 @@ const isCoordinateInsideArea = (coordinate, areaEdges) => {
   return isInside;
 }
 
-const findDistrict = (coordinate, ) => {
-  
+const loadGeoData = async () => {
+  let response = await fetch("geoUrl", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    mode: "cors",
+    referrerPolicy: "no-referrer",
+  });
+
+  if (response.status == 200) {
+    let json = await response.json()
+    return json
+  } else {
+    console.log("error")
+  }
+}
+
+const findDistrict = async (coordinate) => {
+  const data = await loadGeoData()
+
+  const coordinates = data["features"]
+  const district = coordinate.filter(
+    (c) => isCoordinateInsideArea(coordinate, coordinates["geometry"][coordinates][0])
+  )
+
+  return {
+    latitude: coordinate[0],
+    longitude: coordinate[1],
+    district: district[0]["properties"]["osiedle"]
+  }
+}
+
+const sendCurrentLocation = async () => {
+  coordinate = [position.coords.latitude, position.coords.longitude]
+  const loc = findDistrict(coordinate)
+  console.log(loc)
 }
 
 export default App;

@@ -17,11 +17,11 @@ const insertCrime = async (crime) => {
     return await pool.query(query, [name, weight, subject]).rows
 }
 
-const getReviewBySubject = async (pesel) => {
+const getCrimeBySubject = async (pesel) => {
 
     const query = `
-        select r.* from review r
-        join user_ u on r.subject = u.pesel
+        select c.* from crime c
+        join user_ u on c.subject = u.pesel
         where u.pesel = $1
     `
 
