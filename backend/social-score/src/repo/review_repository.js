@@ -30,3 +30,12 @@ const getReviewBySubject = async (pesel) => {
 
 }
 
+const getReviews = async () => {
+
+    const query = `
+        select * from review
+    `
+
+    return await pool.query(query, []).rows
+
+}
