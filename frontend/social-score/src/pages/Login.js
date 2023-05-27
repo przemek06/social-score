@@ -1,15 +1,39 @@
 import React, { useState, useEffect } from "react"
 import { Container, Form, Button, Dropdown,  Row, Col, Nav  } from 'react-bootstrap';
+import { redirect } from "react-router-dom";
 
-const Login = () => {
+const loadReviewData = async (data) => {
+    let requestBody = JSON.stringify(data);
+    let response = await fetch("http://localhost:5000/auth/login", {
+      method: "POST",
+      body: requestBody,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      mode: "cors",
+      referrerPolicy: "no-referrer",
+    });
+  
+    if (response.status == 200) {
+      let json = await response.json()
+      return json
+    } else {
+      console.log("error")
+    }
+  }
+
+const Login = ({onUserChange}) => {
     const [data, setData] = useState({
         pesel: "",
         password: "",
     });
   
-    const handleRegister = (e) => {
+    const handleLogin = (e) => {
       e.preventDefault();
-      // Handle registration logic here
+      let user = loadReviewData();
+      redirect("/");
+      onUserChange(user.role);
     };
 
     const onDataChange = (e, value) => {
@@ -17,36 +41,13 @@ const Login = () => {
         newData[value] = e.target.value;
         setData(newData);
     };
-
-    const onDropdownChange = (e, value) => {
-        let newData = {...data};
-        newData[value] = e;
-        setData(newData);
-    };
-
-    const getDropdownText = (num) => {
-        switch(num) {
-            case "0":
-              return "Brak wykształcenia";
-            case "1":
-                return "Podstawowe";
-            case "2":
-                return "Średnie";
-            case "3":
-                return "Wyższe";
-            case "4":
-                return "Doktorat";
-            default:
-                return "Brak wykształcenia";
-        }
-    }
   
     return (
         <div style={{display: 'flex', justifyContent: 'center', height: '100vh', alignItems: 'center', padding: '20px', backgroundColor: 'plum'}}>
             <div style={{backgroundColor: 'white', padding: '30px', width: '50vh', borderRadius: '15px'}}>
             <Container>
                 <h1 style={{marginBottom: 30}}>Zaloguj się</h1>
-                <Form onSubmit={handleRegister}>
+                <Form onSubmit={handleLogin}>
                 <Form.Group controlId="formPesel" className="mb-3">
                     <Form.Label>Pesel</Form.Label>
                     <Form.Control
