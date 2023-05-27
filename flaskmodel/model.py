@@ -1,6 +1,8 @@
 import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
+import sklearn
+print(sklearn.__version__)
 
 
 mlp = MLPClassifier(hidden_layer_sizes=(16,64,32), activation='relu', solver='adam', max_iter=500)
